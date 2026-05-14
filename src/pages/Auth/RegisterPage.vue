@@ -36,173 +36,80 @@ async function handleRegister() {
 </script>
 
 <template>
-    <div class="container">
-        <div class="card">
-            <h2>Register</h2>
+    <div class="flex justify-center items-center min-h-screen bg-gray-100">
+        <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <h2 class="text-center mb-6 text-2xl font-bold text-gray-800">Register</h2>
 
-            <div v-if="errors.general" class="error-message">
+            <div v-if="errors.general" class="bg-red-100 text-red-800 px-3 py-3 rounded mb-4">
                 {{ errors.general[0] }}
             </div>
 
-            <div class="field">
-                <label>Name</label>
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold text-gray-800">Name</label>
                 <input
                     v-model="form.name"
                     type="text"
                     placeholder="Enter your name"
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-base transition-colors duration-300 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
-                <span v-if="errors.name" class="error">
+                <span v-if="errors.name" class="block text-red-700 text-sm mt-1">
                     {{ errors.name[0] }}
                 </span>
             </div>
 
-            <div class="field">
-                <label>Email</label>
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold text-gray-800">Email</label>
                 <input
                     v-model="form.email"
                     type="email"
                     placeholder="Enter your email"
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-base transition-colors duration-300 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
-                <span v-if="errors.email" class="error">
+                <span v-if="errors.email" class="block text-red-700 text-sm mt-1">
                     {{ errors.email[0] }}
                 </span>
             </div>
 
-            <div class="field">
-                <label>Password</label>
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold text-gray-800">Password</label>
                 <input
                     v-model="form.password"
                     type="password"
                     placeholder="Enter your password"
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-base transition-colors duration-300 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
-                <span v-if="errors.password" class="error">
+                <span v-if="errors.password" class="block text-red-700 text-sm mt-1">
                     {{ errors.password[0] }}
                 </span>
             </div>
 
-            <div class="field">
-                <label>Confirm Password</label>
+            <div class="mb-4">
+                <label class="block mb-2 font-semibold text-gray-800">Confirm Password</label>
                 <input
                     v-model="form.password_confirmation"
                     type="password"
                     placeholder="Confirm your password"
+                    class="w-full px-3 py-2 border border-gray-300 rounded text-base transition-colors duration-300 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
                 />
-                <span v-if="errors.password_confirmation" class="error">
+                <span v-if="errors.password_confirmation" class="block text-red-700 text-sm mt-1">
                     {{ errors.password_confirmation[0] }}
                 </span>
             </div>
 
-            <button @click="handleRegister" :disabled="loading">
+            <button
+                @click="handleRegister"
+                :disabled="loading"
+                class="w-full py-3 bg-blue-600 text-white border-none rounded text-base font-semibold cursor-pointer transition-colors duration-300 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-700"
+            >
                 {{ loading ? 'Registering...' : 'Register' }}
             </button>
 
-            <p>Already have an account?
-                <RouterLink to="/login">Login here</RouterLink>
+            <p class="text-center mt-6 text-gray-600">
+                Already have an account?
+                <RouterLink to="/login" class="text-blue-600 hover:text-blue-800 font-semibold">Login here</RouterLink>
             </p>
         </div>
     </div>
 </template>
 
-<style scoped>
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f5f5f5;
-}
 
-.card {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-}
-
-h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: #333;
-}
-
-.error-message {
-    background-color: #fee;
-    color: #c33;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 1rem;
-}
-
-.field {
-    margin-bottom: 1rem;
-}
-
-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #333;
-}
-
-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-}
-
-button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.error {
-    display: block;
-    color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
-
-p {
-    text-align: center;
-    margin-top: 1.5rem;
-    color: #666;
-}
-
-a {
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-</style>

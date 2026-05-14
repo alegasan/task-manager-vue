@@ -34,106 +34,48 @@ async function handleLogin() {
 </script>
 
 <template>
-    <div class="container">
-        <div class="card">
-            <h2>Login</h2>
+    <div class="flex justify-center items-center h-screen bg-gray-100">
+        <div class="bg-white p-8 rounded-lg w-full max-w-md shadow-md">
+            <h2 class="text-center mb-6 text-2xl font-bold">Login</h2>
 
-            <div class="field">
-                <label>Email</label>
+            <div class="mb-4 flex flex-col gap-1">
+                <label class="font-semibold text-sm">Email</label>
                 <input
                     v-model="form.email"
                     type="email"
                     placeholder="Enter your email"
+                    class="px-3 py-2 border border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                 />
-                <span v-if="errors.email" class="error">
+                <span v-if="errors.email" class="text-red-600 text-xs">
                     {{ errors.email[0] }}
                 </span>
             </div>
 
-            <div class="field">
-                <label>Password</label>
+            <div class="mb-4 flex flex-col gap-1">
+                <label class="font-semibold text-sm">Password</label>
                 <input
                     v-model="form.password"
                     type="password"
                     placeholder="Enter your password"
+                    class="px-3 py-2 border border-gray-300 rounded-md text-base focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100"
                 />
-                <span v-if="errors.password" class="error">
+                <span v-if="errors.password" class="text-red-600 text-xs">
                     {{ errors.password[0] }}
                 </span>
             </div>
 
-            <button @click="handleLogin" :disabled="loading">
+            <button
+                @click="handleLogin"
+                :disabled="loading"
+                class="w-full py-3 bg-indigo-600 text-white border-none rounded-md text-base cursor-pointer mt-1 disabled:bg-indigo-300 disabled:cursor-not-allowed hover:bg-indigo-700 transition-colors duration-300"
+            >
                 {{ loading ? 'Logging in...' : 'Login' }}
             </button>
 
-            <p>No account? 
-                <RouterLink to="/register">Register here</RouterLink>
+            <p class="text-center mt-4 text-sm">
+                No account? 
+                <RouterLink to="/register" class="text-indigo-600 hover:text-indigo-800 font-semibold">Register here</RouterLink>
             </p>
         </div>
     </div>
 </template>
-
-<style scoped>
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #f5f5f5;
-}
-.card {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-h2 {
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-.field {
-    margin-bottom: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-label {
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-input {
-    padding: 0.6rem;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-}
-button {
-    width: 100%;
-    padding: 0.75rem;
-    background: #4f46e5;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 0.5rem;
-}
-button:disabled {
-    background: #a5b4fc;
-    cursor: not-allowed;
-}
-.error {
-    color: red;
-    font-size: 0.8rem;
-}
-p {
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-}
-a {
-    color: #4f46e5;
-}
-</style>
