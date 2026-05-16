@@ -2,31 +2,25 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import { Button } from '@/components/ui/button'
+import Sidebar from '@/components/Sidebar.vue'
+import Header from '@/components/Header.vue'
+
 const router = useRouter()
 const auth = useAuthStore()
-
-const handleLogout = () => {
-  auth.logout()
-  router.push('/login')
-}
 </script>
 
 <template>
-    <div class="flex justify-end p-4">
-        <Button 
-            @click="handleLogout" 
-            variant="outline"
-            class="cursor-pointer"
-        >
-            Logout
-        </Button>
-    </div>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Tasks</h1>
-    </div>
-
-    <div>
-
-    </div>
+    <Sidebar>
+        <main class="p-6 md:p-8">
+            <div class="max-w-6xl">
+                <Header title="Your Tasks" description="Organize and manage your daily tasks efficiently" />
+        
+                <div class="grid gap-6">
+                    <div class="bg-dark-surface border border-dark-border rounded-lg p-6 shadow-lg">
+                        <p class="text-dark-text">No tasks yet. Start by creating your first task!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </Sidebar>
 </template>

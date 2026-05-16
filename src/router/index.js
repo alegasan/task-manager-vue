@@ -20,6 +20,12 @@ const routes = [
     component: () => import('@/pages/Task/TaskPage.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/index',
+    name: 'Dashboard',
+    component: () => import('@/pages/Dashboard/Index.vue'),
+    meta: { requiresAuth: true }
+  },
 ]
 
 const router = createRouter({
