@@ -9,6 +9,7 @@ export const useTaskStore = defineStore('tasks', {
         filters: {
             search: '',
             status: '',
+            priority: '',
             sortBy: 'created_at',
             sortOrder: 'desc',
             perPage: 5,
@@ -35,6 +36,9 @@ export const useTaskStore = defineStore('tasks', {
                 }
                 if (this.filters.status) {
                     params.status = this.filters.status
+                }
+                if (this.filters.priority) {
+                    params.priority = this.filters.priority
                 }
 
                 const response = await api.get('/tasks', { params })
@@ -67,6 +71,10 @@ export const useTaskStore = defineStore('tasks', {
 
         setStatus(status) {
             this.filters.status = status
+        },
+
+        setPriority(priority) {
+            this.filters.priority = priority
         },
 
         setSortBy(field, direction) {

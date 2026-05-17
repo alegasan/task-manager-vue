@@ -122,4 +122,17 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Style select options for dark theme */
+  select option {
+    @apply bg-dark-surface text-dark-text;
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+  }
+  
+  select option:checked {
+    @apply bg-blue-600 text-white;
+    background-color: #2563eb !important;
+    color: white !important;
+  }
 }

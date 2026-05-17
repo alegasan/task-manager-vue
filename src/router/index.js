@@ -31,6 +31,18 @@ const routes = [
     name: 'CreateTask',
     component: () => import('@/pages/Task/CreateTask.vue'),
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/EditTask/:id',
+    name: 'EditTask',
+    component: () => import('@/pages/Task/EditTask.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/ShowTask/:id',
+    name: 'ShowTask',
+    component: () => import('@/pages/Task/ShowTask.vue'),
+    meta: { requiresAuth: true }
   }
 ]
 

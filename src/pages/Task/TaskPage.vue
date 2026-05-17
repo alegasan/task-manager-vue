@@ -18,6 +18,7 @@ const taskStore = useTaskStore()
 
 const searchQuery = ref('')
 const selectedStatus = ref('')
+const selectedPriority = ref('')
 const confirmDialog = ref(null)
 const taskToDelete = ref(null)
 const currentPage = ref(1)
@@ -27,6 +28,13 @@ const statusOptions = [
     { value: 'pending', label: 'Pending' },
     { value: 'in_progress', label: 'In Progress' },
     { value: 'done', label: 'Done' },
+]
+
+const priorityOptions = [
+    { value: '', label: 'All Priorities' },
+    { value: 'high', label: 'High' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'low', label: 'Low' },
 ]
 
 onMounted(() => {
@@ -54,6 +62,13 @@ const loadTasks = async () => {
 const handleFilterStatus = async (status) => {
     selectedStatus.value = status
     taskStore.setStatus(status)
+    currentPage.value = 1
+    await taskStore.fetchTasks(1)
+}
+
+const handleFilterPriority = async (priority) => {
+    selectedPriority.value = priority
+    taskStore.setPriority(priority)
     currentPage.value = 1
     await taskStore.fetchTasks(1)
 }
@@ -98,6 +113,15 @@ const getStatusColor = (status) => {
     return colors[status] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
 }
 
+const getPriorityColor = (priority) => {
+    const colors = {
+        high: 'bg-red-500/20 text-red-400 border-red-500/30',
+        medium: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+        low: 'bg-green-500/20 text-green-400 border-green-500/30',
+    }
+    return colors[priority] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+}
+
 const formatDate = (date) => {
     if (!date) return 'No due date'
     return new Date(date).toLocaleDateString('en-US', {
@@ -123,7 +147,7 @@ const formatDate = (date) => {
               
                 <div class="grid gap-4 mb-6 md:grid-cols-12">
                
-                    <div class="md:col-span-8">
+                    <div class="md:col-span-6">
                         <div class="relative">
                             <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-dark-textSecondary" />
                             <input
@@ -135,11 +159,18 @@ const formatDate = (date) => {
                     </div>
 
                
-                    <div class="md:col-span-4">
+                    <div class="md:col-span-3">
                         <Select
                             :model-value="selectedStatus"
                             :options="statusOptions"
                             @change="handleFilterStatus" />
+                    </div>
+
+                    <div class="md:col-span-3">
+                        <Select
+                            :model-value="selectedPriority"
+                            :options="priorityOptions"
+                            @change="handleFilterPriority" />
                     </div>
                 </div>
 
@@ -175,15 +206,21 @@ const formatDate = (date) => {
         
                 <div v-else class="grid gap-4 mb-8">
                     <div v-for="task in taskStore.tasks" :key="task.id"
-                        class="bg-dark-surface border border-dark-border rounded-lg p-5 hover:border-dark-border/80 transition-colors">
+                        @click="router.push(`/ShowTask/${task.id}`)"
+                        class="bg-dark-surface border border-dark-border rounded-lg p-5 cursor-pointer group">
                         <div class="flex items-start justify-between gap-4 mb-3">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-dark-text mb-1">{{ task.title }}</h3>
-                                <p class="text-sm text-dark-textSecondary line-clamp-2">{{ task.description || 'No description' }}</p>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-lg font-semibold text-dark-text mb-1 truncate group-hover:text-blue-400 transition-colors">{{ task.title }}</h3>
+                                <p class="text-sm text-dark-textSecondary truncate">{{ task.description?.substring(0, 60) || 'No description' }}{{ task.description?.length > 60 ? '...' : '' }}</p>
                             </div>
-                            <span :class="`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`">
-                                {{ (task.status || 'pending').replace('_', ' ') }}
-                            </span>
+                            <div class="flex gap-2">
+                                <span :class="`px-3 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`">
+                                    {{ (task.priority || 'medium').charAt(0).toUpperCase() + (task.priority || 'medium').slice(1) }}
+                                </span>
+                                <span :class="`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(task.status)}`">
+                                    {{ (task.status || 'pending').replace('_', ' ') }}
+                                </span>
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between pt-4 border-t border-dark-border/30">
@@ -191,7 +228,7 @@ const formatDate = (date) => {
                                 <Calendar class="h-4 w-4" />
                                 <span>{{ formatDate(task.due_date) }}</span>
                             </div>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-2" @click.stop>
                                 <button
                                     @click="router.push(`/EditTask/${task.id}`)"
                                     class="p-2 rounded-lg hover:bg-white/5 text-dark-textSecondary hover:text-dark-text transition-colors">
