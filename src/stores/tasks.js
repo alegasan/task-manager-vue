@@ -5,19 +5,43 @@ export const useTaskStore = defineStore('tasks', {
     state: () => ({
         tasks: [],
         loading: false,
+        pagination: null,
+        filters: {
+            search: '',
+            status: '',
+            sortBy: 'created_at',
+            sortOrder: 'desc',
+            perPage: 10,
+        },
     }),
 
     actions: {
         async createTask(taskData) {
             const response = await api.post('/tasks', taskData)
-            this.tasks.push(response.data)
             return response.data
         },
-        async fetchTasks() {
+        async fetchTasks(page = 1) {
             this.loading = true
             try {
-                const response = await api.get('/tasks')
+                const params = {
+                    page,
+                    per_page: this.filters.perPage,
+                    sort_by: this.filters.sortBy,
+                    sort_order: this.filters.sortOrder,
+                }
+
+                if (this.filters.search) {
+                    params.search = this.filters.search
+                }
+                if (this.filters.status) {
+                    params.status = this.filters.status
+                }
+
+                const response = await api.get('/tasks', { params })
                 this.tasks = Array.isArray(response.data) ? response.data : (response.data?.data || [])
+                if (response.data?.meta) {
+                    this.pagination = response.data.meta
+                }
             } finally {
                 this.loading = false
             }
@@ -35,6 +59,19 @@ export const useTaskStore = defineStore('tasks', {
         async deleteTask(id) {
             await api.delete(`/tasks/${id}`)
             this.tasks = this.tasks.filter(task => task.id !== id)
+        },
+
+        setSearch(search) {
+            this.filters.search = search
+        },
+
+        setStatus(status) {
+            this.filters.status = status
+        },
+
+        setSortBy(field, direction) {
+            this.filters.sortBy = field
+            this.filters.sortOrder = direction
         },
     },
 })

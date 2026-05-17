@@ -18,6 +18,9 @@ const props = defineProps({
 
 <template>
   <Primitive
+    data-slot="button"
+    :data-variant="variant"
+    :data-size="size"
     :as="as"
     :as-child="asChild"
     :class="cn(buttonVariants({ variant, size }), props.class)"

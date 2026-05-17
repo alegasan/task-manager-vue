@@ -17,6 +17,7 @@ const form = ref({
     title: '',
     description: '',
     due_date: '',
+    status: 'pending',
 })
 
 const errors = ref({})
@@ -49,6 +50,7 @@ const resetForm = () => {
         title: '',
         description: '',
         due_date: '',
+        status: 'pending',
     }
 }
 </script>
