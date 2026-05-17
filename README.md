@@ -128,6 +128,3 @@ Update the API base URL in `src/services/api.js` to point to your backend API.
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
-## License
-
-This project is open source and available under the MIT License.
