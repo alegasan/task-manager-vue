@@ -26,6 +26,12 @@ const routes = [
     component: () => import('@/pages/Dashboard/Index.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/CreateTask',
+    name: 'CreateTask',
+    component: () => import('@/pages/Task/CreateTask.vue'),
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = createRouter({

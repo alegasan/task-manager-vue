@@ -9,8 +9,8 @@ const auth = useAuthStore()
 const isOpen = ref(false)
 
 const menuItems = [
-  { icon: LayoutList, label: 'Tasks', path: '/tasks' },
   { icon: Home, label: 'Dashboard', path: '/index' },
+  { icon: LayoutList, label: 'Tasks', path: '/tasks' },
   { icon: Settings, label: 'Settings', path: '/settings' },
 ]
 
@@ -38,7 +38,7 @@ const navigateTo = (path) => {
       :class="[
         'fixed md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-40',
         'w-64 bg-dark-surface border-r border-dark-border',
-        'flex flex-col',
+        'flex flex-col h-screen md:h-auto',
         isOpen ? 'translate-x-0' : '-translate-x-full'
       ]"
     >
@@ -83,7 +83,7 @@ const navigateTo = (path) => {
         </div>
         <button
           @click="handleLogout"
-          class="w-full px-4 py-3 bg-blue-accent hover:bg-blue-accentDark text-white font-semibold rounded-lg transition-colors duration-300 flex items-center justify-center gap-2"
+          class="w-full px-4 py-3 bg-blue-accent hover:bg-blue-accentDark text-white font-semibold rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 cursor-pointer"
         >
           <LogOut :size="18" />
           <span>Logout</span>
@@ -99,18 +99,16 @@ const navigateTo = (path) => {
     ></div>
 
   
-    <div class="flex-1 w-full md:w-auto">
-    
-      <header class="md:hidden bg-dark-surface border-b border-dark-border p-4 sticky top-0 z-20">
-        <button
-          @click="toggleSidebar"
-          class="text-blue-accent hover:text-blue-light transition-colors"
-        >
-          <Menu :size="28" />
-        </button>
-      </header>
-
-      <slot></slot>
+    <div class="flex-1 flex flex-col overflow-hidden min-w-0">
+      <button
+        @click="toggleSidebar"
+        class="md:hidden p-4 text-dark-text hover:text-blue-accent transition-colors"
+        aria-label="Open navigation menu"
+      >
+        <Menu :size="24" />
+      </button>      <div class="flex-1 overflow-auto">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
