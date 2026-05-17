@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref, onMounted, computed, watch } from 'vue'
-import { Plus, Search, Trash2, Edit2, Calendar, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { Plus, Search, Trash2, Edit2, Calendar, ChevronLeft, ChevronRight, Eye } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import { useTaskStore } from '@/stores/tasks'
@@ -230,11 +230,18 @@ const formatDate = (date) => {
                             </div>
                             <div class="flex items-center gap-2" @click.stop>
                                 <button
+                                    @click="router.push(`/ShowTask/${task.id}`)"
+                                    class="p-2 rounded-lg hover:bg-blue-500/10 text-dark-textSecondary hover:text-blue-400 transition-colors">
+                                    <Eye class="h-4 w-4" />
+                                </button>
+                                <button
+                                    v-if="task.status !== 'done'"
                                     @click="router.push(`/EditTask/${task.id}`)"
                                     class="p-2 rounded-lg hover:bg-white/5 text-dark-textSecondary hover:text-dark-text transition-colors">
                                     <Edit2 class="h-4 w-4" />
                                 </button>
                                 <button
+                                    v-if="task.status !== 'done'"
                                     @click="handleDeleteTask(task.id)"
                                     class="p-2 rounded-lg hover:bg-red-500/10 text-dark-textSecondary hover:text-red-400 transition-colors">
                                     <Trash2 class="h-4 w-4" />

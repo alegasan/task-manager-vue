@@ -3,9 +3,7 @@ import { onMounted, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Header from '@/components/Header.vue';
 import Sidebar from '@/components/Sidebar.vue'
-import Button from '@/components/ui/button/Button.vue';
 import { Clock, Play, Check, Flame, AlertCircle, ChevronDown } from 'lucide-vue-next'
-import CardInfo from '@/components/cardInfo.vue';
 import Calendar from '@/components/Calendar.vue';
 import CalendarModal from '@/components/CalendarModal.vue';
 import { useTaskStore } from '@/stores/tasks';

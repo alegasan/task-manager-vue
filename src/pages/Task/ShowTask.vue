@@ -188,12 +188,14 @@ const getStatusLabel = (status) => {
           <!-- Actions -->
           <div class="flex items-center gap-3 pt-6 border-t border-dark-border/30">
             <Button
+              v-if="task.status !== 'done'"
               @click="handleEdit"
               class="inline-flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white rounded-md text-sm font-medium shadow-md ring-1 ring-blue-400/30 cursor-pointer"
             >
               Edit Task
             </Button>
             <Button
+              v-if="task.status !== 'done'"
               type="button"
               @click="handleDelete"
               class="inline-flex items-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-md text-sm font-medium border border-red-500/30 cursor-pointer"
