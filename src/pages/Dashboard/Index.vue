@@ -21,8 +21,8 @@ const inProgressCount = computed(() =>
     Array.isArray(taskStore.tasks) ? taskStore.tasks.filter(t => t.status === 'in_progress').length : 0
 );
 
-const completedCount = computed(() =>
-    Array.isArray(taskStore.tasks) ? taskStore.tasks.filter(t => t.status === 'completed').length : 0
+const doneCount = computed(() =>
+    Array.isArray(taskStore.tasks) ? taskStore.tasks.filter(t => t.status === 'done').length : 0
 );
 
 </script>
@@ -48,10 +48,6 @@ const completedCount = computed(() =>
                                 <p class="text-2xl font-semibold text-dark-text">{{ pendingCount }}</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="sm"
-                            class="rounded-full border border-dark-border/60 bg-transparent px-3 py-1 text-xs font-normal text-dark-textSecondary shadow-none hover:border-dark-border hover:bg-white/5 hover:text-dark-text">
-                            View
-                        </Button>
                     </div>
 
                     <div
@@ -66,10 +62,6 @@ const completedCount = computed(() =>
                                 <p class="text-2xl font-semibold text-dark-text">{{ inProgressCount }}</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="sm"
-                            class="rounded-full border border-dark-border/60 bg-transparent px-3 py-1 text-xs font-normal text-dark-textSecondary shadow-none hover:border-dark-border hover:bg-white/5 hover:text-dark-text">
-                            View
-                        </Button>
                     </div>
 
                     <div
@@ -81,13 +73,9 @@ const completedCount = computed(() =>
                             </div>
                             <div>
                                 <h4 class="text-sm font-medium text-dark-text">Done</h4>
-                                <p class="text-2xl font-semibold text-dark-text">{{ completedCount }}</p>
+                                <p class="text-2xl font-semibold text-dark-text">{{ doneCount }}</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="sm"
-                            class="rounded-full border border-dark-border/60 bg-transparent px-3 py-1 text-xs font-normal text-dark-textSecondary shadow-none hover:border-dark-border hover:bg-white/5 hover:text-dark-text">
-                            View
-                        </Button>
                     </div>
                 </div>
             </section>

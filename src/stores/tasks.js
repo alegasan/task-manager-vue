@@ -11,7 +11,7 @@ export const useTaskStore = defineStore('tasks', {
             status: '',
             sortBy: 'created_at',
             sortOrder: 'desc',
-            perPage: 10,
+            perPage: 5,
         },
     }),
 

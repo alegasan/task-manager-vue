@@ -3,7 +3,7 @@ import api from '@/services/api'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: null,
+        user: JSON.parse(localStorage.getItem('user')) || null,
         token: localStorage.getItem('token') || null,
     }),
 
@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', {
             this.token = response.data.token
             this.user = response.data.user
             localStorage.setItem('token', this.token)
+            localStorage.setItem('user', JSON.stringify(this.user))
         },
 
         async login(form) {
@@ -24,17 +25,20 @@ export const useAuthStore = defineStore('auth', {
             this.token = response.data.token
             this.user = response.data.user
             localStorage.setItem('token', this.token)
+            localStorage.setItem('user', JSON.stringify(this.user))
         },
 
         async logout() {
             await api.post('/logout')
             this.token = null
             this.user = null
+            localStorage.removeItem('user')
             localStorage.removeItem('token')
         },
 
         async fetchUser() {
             const response = await api.get('/me')
+            localStorage.setItem('user', JSON.stringify(this.user))
             this.user = response.data
         },
     },

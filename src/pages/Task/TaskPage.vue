@@ -1,7 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
-import { Plus, Search, Trash2, Edit2, Calendar } from 'lucide-vue-next'
+import { ref, onMounted, computed, watch } from 'vue'
+import { Plus, Search, Trash2, Edit2, Calendar, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import { useToastStore } from '@/stores/toast'
 import { useTaskStore } from '@/stores/tasks'
@@ -20,39 +20,55 @@ const searchQuery = ref('')
 const selectedStatus = ref('')
 const confirmDialog = ref(null)
 const taskToDelete = ref(null)
+const currentPage = ref(1)
+let searchTimeout = null
 const statusOptions = [
     { value: '', label: 'All Statuses' },
     { value: 'pending', label: 'Pending' },
     { value: 'in_progress', label: 'In Progress' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'cancelled', label: 'Cancelled' },
+    { value: 'done', label: 'Done' },
 ]
 
 onMounted(() => {
     loadTasks()
 })
 
+// Debounced live search
+watch(searchQuery, (newQuery) => {
+    clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(async () => {
+        taskStore.setSearch(newQuery)
+        currentPage.value = 1
+        await taskStore.fetchTasks(1)
+    }, 300)
+})
+
 const loadTasks = async () => {
     try {
         await taskStore.fetchTasks()
     } catch (error) {
-        toastStore.addToast({
-            message: 'Failed to load tasks',
-            type: 'error',
-        })
+        toastStore.error('Error', 'Failed to load tasks')
     }
-}
-
-const handleSearch = async () => {
-    taskStore.setSearch(searchQuery.value)
-    await taskStore.fetchTasks(1)
 }
 
 const handleFilterStatus = async (status) => {
     selectedStatus.value = status
     taskStore.setStatus(status)
+    currentPage.value = 1
     await taskStore.fetchTasks(1)
 }
+
+const handlePageChange = async (page) => {
+    currentPage.value = page
+    await taskStore.fetchTasks(page)
+}
+
+const totalPages = computed(() => {
+    return taskStore.pagination?.last_page || 1
+})
+
+const canGoPrevious = computed(() => currentPage.value > 1)
+const canGoNext = computed(() => currentPage.value < totalPages.value)
 
 const handleDeleteTask = async (id) => {
     taskToDelete.value = id
@@ -77,8 +93,7 @@ const getStatusColor = (status) => {
     const colors = {
         pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
         in_progress: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-        completed: 'bg-green-500/20 text-green-400 border-green-500/30',
-        cancelled: 'bg-red-500/20 text-red-400 border-red-500/30',
+        done: 'bg-green-500/20 text-green-400 border-green-500/30',
     }
     return colors[status] || 'bg-gray-500/20 text-gray-400 border-gray-500/30'
 }
@@ -113,7 +128,6 @@ const formatDate = (date) => {
                             <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-dark-textSecondary" />
                             <input
                                 v-model="searchQuery"
-                                @keyup.enter="handleSearch"
                                 type="text"
                                 placeholder="Search tasks by title or description..."
                                 class="w-full pl-10 pr-4 py-2.5 bg-dark-surface border border-dark-border rounded-lg text-dark-text placeholder-dark-textSecondary focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
@@ -159,7 +173,7 @@ const formatDate = (date) => {
                 </div>
 
         
-                <div v-else class="grid gap-4">
+                <div v-else class="grid gap-4 mb-8">
                     <div v-for="task in taskStore.tasks" :key="task.id"
                         class="bg-dark-surface border border-dark-border rounded-lg p-5 hover:border-dark-border/80 transition-colors">
                         <div class="flex items-start justify-between gap-4 mb-3">
@@ -191,6 +205,38 @@ const formatDate = (date) => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+              
+                <div v-if="taskStore.tasks.length > 0 && totalPages > 1" class="flex items-center justify-center gap-2 mt-8">
+                    <button
+                        @click="handlePageChange(currentPage - 1)"
+                        :disabled="!canGoPrevious"
+                        class="p-2 rounded-lg border border-dark-border hover:border-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-dark-border transition-colors">
+                        <ChevronLeft class="h-4 w-4 text-dark-textSecondary" />
+                    </button>
+
+                    <div class="flex items-center gap-1">
+                        <button
+                            v-for="page in totalPages"
+                            :key="page"
+                            @click="handlePageChange(page)"
+                            :class="[
+                                'min-w-10 h-10 rounded-lg border transition-colors font-medium text-sm',
+                                currentPage === page
+                                    ? 'bg-blue-500/20 border-blue-500/50 text-blue-400'
+                                    : 'border-dark-border text-dark-textSecondary hover:border-blue-500/50 hover:text-dark-text'
+                            ]">
+                            {{ page }}
+                        </button>
+                    </div>
+
+                    <button
+                        @click="handlePageChange(currentPage + 1)"
+                        :disabled="!canGoNext"
+                        class="p-2 rounded-lg border border-dark-border hover:border-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-dark-border transition-colors">
+                        <ChevronRight class="h-4 w-4 text-dark-textSecondary" />
+                    </button>
                 </div>
             </div>
         </main>

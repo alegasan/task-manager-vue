@@ -38,7 +38,7 @@ const navigateTo = (path) => {
       :class="[
         'fixed md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-40',
         'w-64 bg-dark-surface border-r border-dark-border',
-        'flex flex-col h-screen md:h-auto',
+        'flex flex-col h-screen self-start md:sticky md:top-0',
         isOpen ? 'translate-x-0' : '-translate-x-full'
       ]"
     >
